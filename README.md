@@ -1,40 +1,56 @@
 ﻿# PizzariaJava
-Sistema de Gestão de Pedidos - Pizzaria
-Este projeto é uma aplicação Java desenvolvida para gerenciar o fluxo de pedidos de uma pizzaria, focando na aplicação de conceitos de Programação Orientada a Objetos e manipulação de Coleções.
+> **Sistema de Gestão de Pedidos**
+> 
+> Aplicação robusta em Java para automação de fluxos comerciais em pizzarias, com foco em Programação Orientada a Objetos (POO) e manipulação dinâmica de coleções.
 
-# SOBRE O PROJETO
-O sistema permite o cadastro de clientes, a manutenção de um cardápio de pizzas e a gestão completa de pedidos, automatizando cálculos de subtotais e totais, além de monitorar o status de cada solicitação.
+---
 
-Estrutura do Modelo
-O projeto está dividido em 4 classes principais de modelo:
+## Sobre o Projeto
+O sistema faz o gerenciamento de clientes e cardápio e o fechamento financeiro do pedido. A solução automatiza cálculos de subtotal por item e consolida o valor total do pedido, com estados logísticos.
 
-1. Cliente
-Representa o consumidor final.
+---
 
-Atributos: id, nome, telefone, endereco.
+## Arquitetura do Modelo de Dados
+A lógica de domínio está estruturada em quatro entidades fundamentais, organizadas para garantir integridade e baixo acoplamento.
 
-Validação: Implementa lógica para garantir que telefone e endereco sejam preenchidos obrigatoriamente.
+### 1. Entidade Cliente
+Responsável pela identificação e localização do consumidor.
+* **Atributos:** `id`, `nome`, `telefone`, `endereco`.
 
-2. Pizza
-Define os produtos disponíveis no cardápio.
+### 2. Entidade Pizza
+Define os produtos e especificações do catálogo.
+* **Atributos:** `id`, `sabor`, `tamanho` (P, M, G), `precoBase`.
 
-Atributos: id, sabor, tamanho (P, M, G), precoBase.
+### 3. Entidade ItemPedido
+Classe de associação que gerencia a relação entre produtos e vendas.
+* **Atributos:** `id`, `pizza`, `quantidade`, `subtotal`.
+* **Lógica de Cálculo:**
+    $$subtotal = precoBase \times quantidade$$
 
-Destaque: Implementação completa de encapsulamento com construtores (cheio/vazio) e métodos acessores.
+### 4. Entidade Pedido
+Classe centralizadora da inteligência de negócio.
+* **Atributos:** `id`, `cliente`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
+* **Fluxo de Status:** `CRIADO` → `PREPARANDO` → `ENTREGUE`.
 
-3. ItemPedido
-Classe associativa que vincula uma pizza a um pedido específico.
+---
 
-Atributos: id, pizza, quantidade, subtotal.
+## Regras de Negócio e Implementação
 
-Regra de Negócio: Método calcularSubtotal() que processa automaticamente o valor total do item baseado na quantidade.
+| Funcionalidade | Descrição Técnica |
+| :--- | :--- |
+| **Persistência** | Implementada via JDBC com suporte a transações relacionais. |
+| **Cálculo de Totais** | Iteração sobre coleções (`List`) para soma de subtotais. |
+| **Gestão de Tempo** | Registro preciso de transações utilizando `LocalDateTime`. |
+| **Validação** | Camada de verificação pré-persistência para dados de contato. |
 
-4. Pedido
-A classe central que gerencia a inteligência do negócio.
+---
 
-Atributos: id, cliente, List<ItemPedido>, dataHora, status, valorTotal.
+## Configuração do Ambiente de Desenvolvimento
 
-Estados do Pedido: CRIADO, PREPARANDO, ENTREGUE.
+### Requisitos de Software
+* Java Development Kit (JDK) 17+
+* MySQL Server 8.0+
+* Maven ou IDE compatível (IntelliJ/Eclipse)
 
 # SCHEMA
 
@@ -49,3 +65,16 @@ CREATE TABLE pizza (
     tamanho VARCHAR(10)
 );
 ```
+### API Endpoints 
+
+### PIZZA
+
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/pizzas` | Lista todas as pizzas cadastradas |
+| `GET` | `/pizzas/{id}` | Busca os detalhes de uma pizza por ID |
+| `POST` | `/pizzas` | Cria um novo registro de pizza |
+| `PUT` | `/pizzas/{id}` | Atualiza as informações de uma pizza |
+| `DELETE` | `/pizzas/{id}` | Remove uma pizza permanentemente |
+
+---
