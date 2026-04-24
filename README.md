@@ -40,8 +40,10 @@ Estados do Pedido: CRIADO, PREPARANDO, ENTREGUE.
 
 CREATE DATABASE pizzaria;
 
+```sql
 CREATE TABLE pizza (
-    id VARCHAR(255) PRIMARY KEY,
-    sabor VARCHAR(255),
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    sabor VARCHAR(255) NOT NULL,
     tamanho VARCHAR(10)
 );
+```
