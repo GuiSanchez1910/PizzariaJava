@@ -38,7 +38,9 @@ Estados do Pedido: CRIADO, PREPARANDO, ENTREGUE.
 
 # SCHEMA
 
+```sql
 CREATE DATABASE pizzaria;
+```
 
 ```sql
 CREATE TABLE pizza (
