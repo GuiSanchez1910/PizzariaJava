@@ -1,9 +1,10 @@
 package service;
 
+import java.util.List;
+import java.util.UUID;
+
 import models.Pizza;
 import repository.PizzaRepository;
-
-import java.util.*;
 
 public class PizzaService {
     private PizzaRepository repo = new PizzaRepository();
