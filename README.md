@@ -65,6 +65,15 @@ CREATE TABLE pizza (
     tamanho VARCHAR(10)
 );
 ```
+
+```sql
+CREATE TABLE cliente (
+    id VARCHAR (50) PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    telefone VARCHAR(15) NOT NULL,
+    endereco VARCHAR(255)
+);
+```
 ### API Endpoints 
 
 ### PIZZA
@@ -77,4 +86,13 @@ CREATE TABLE pizza (
 | `PUT` | `/pizzas/{id}` | Atualiza as informações de uma pizza |
 | `DELETE` | `/pizzas/{id}` | Remove uma pizza permanentemente |
 
+### CLIENTE
+
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/clientes` | Lista todas os clientes cadastradas |
+| `GET` | `/clientes/{id}` | Busca os detalhes de um cliente por ID |
+| `POST` | `/clientes` | Cria um novo registro de cliente |
+| `PUT` | `/clientes/{id}` | Atualiza as informações de um cliente |
+| `DELETE` | `/clientes/{id}` | Remove um cliente permanentemente |
 ---
