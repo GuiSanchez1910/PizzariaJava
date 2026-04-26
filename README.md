@@ -74,7 +74,8 @@ CREATE DATABASE pizzaria;
 CREATE TABLE pizza (
     id VARCHAR (50) PRIMARY KEY,
     sabor VARCHAR(255) NOT NULL,
-    tamanho VARCHAR(10)
+    tamanho VARCHAR(10),
+    preco_base DOUBLE NOT NULL
 );
 ```
 
