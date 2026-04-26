@@ -4,13 +4,16 @@ public class Pizza {
     String id;
     String sabor;
     String tamanho;
+    Double precoBase;
 
-    public Pizza() {}
+    public Pizza() {
+    }
 
-    public Pizza(String id, String sabor, String tamanho) {
+    public Pizza(String id, String sabor, String tamanho, Double precoBase) {
         this.id = id;
         this.sabor = sabor;
         this.tamanho = tamanho;
+        this.precoBase = precoBase;
     }
 
     public String getId() {
@@ -35,6 +38,13 @@ public class Pizza {
 
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
-    }    
-    
+    }
+
+    public Double getPrecoBase() {
+        return precoBase;
+    }
+
+    public void setPrecoBase(Double precoBase) {
+        this.precoBase = precoBase;
+    }
 }

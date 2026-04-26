@@ -18,7 +18,11 @@ public class PizzaService {
         if (p.getTamanho() == null || p.getTamanho().isEmpty()) {
             throw new Exception("Tamanho é obrigatório");
         }
-        
+
+        if (p.getPrecoBase() == null || p.getPrecoBase() <= 0) {
+            throw new Exception("Preço base deve ser maior que zero");
+        }
+
         p.setId(UUID.randomUUID().toString());
 
         repo.salvar(p);
@@ -42,6 +46,10 @@ public class PizzaService {
 
         if (p.getId() == null) {
             throw new Exception("ID obrigatório");
+        }
+
+        if (p.getPrecoBase() == null || p.getPrecoBase() <= 0) {
+            throw new Exception("Preço base deve ser maior que zero");
         }
 
         repo.atualizar(p);
