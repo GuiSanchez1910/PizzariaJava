@@ -74,6 +74,16 @@ CREATE TABLE cliente (
     endereco VARCHAR(255)
 );
 ```
+
+```sql
+CREATE TABLE item_pedido (
+    id VARCHAR(50) PRIMARY KEY,
+    pizza_id VARCHAR(50) NOT NULL,
+    quantidade INT NOT NULL,
+    subtotal DOUBLE NOT NULL,
+    FOREIGN KEY (pizza_id) REFERENCES pizza(id)
+);
+```
 ### API Endpoints 
 
 ### PIZZA
@@ -95,4 +105,13 @@ CREATE TABLE cliente (
 | `POST` | `/clientes` | Cria um novo registro de cliente |
 | `PUT` | `/clientes/{id}` | Atualiza as informações de um cliente |
 | `DELETE` | `/clientes/{id}` | Remove um cliente permanentemente |
----
+
+### ITEM_PEDIDO
+
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/itens-pedido` | Lista todos os itens de pedido cadastrados |
+| `GET` | `/itens-pedido/{id}` | Busca os detalhes de um item de pedido por ID |
+| `POST` | `/itens-pedido` | Cria um novo item de pedido (calcula subtotal automaticamente) |
+| `PUT` | `/itens-pedido/{id}` | Atualiza as informações de um item de pedido |
+| `DELETE` | `/itens-pedido/{id}` | Remove um item de pedido permanentemente |
