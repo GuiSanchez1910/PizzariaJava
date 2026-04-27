@@ -1,10 +1,10 @@
 package models;
 
 public class Pizza {
-    String id;
-    String sabor;
-    String tamanho;
-    Double precoBase;
+    private String id;
+    private String sabor;
+    private String tamanho;
+    private Double precoBase;
 
     public Pizza() {
     }
