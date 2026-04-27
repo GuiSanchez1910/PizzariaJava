@@ -9,9 +9,9 @@ import java.util.*;
 
 public class ItemPedidoRepository {
 
-    public void salvar(ItemPedido ip) throws SQLException {
+    public void salvar(ItemPedido ip, String pedidoId) throws SQLException {
 
-        String sql = "INSERT INTO item_pedido (id, pizza_id, quantidade, subtotal) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO item_pedido (id, pizza_id, quantidade, subtotal, pedido_id) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -20,6 +20,7 @@ public class ItemPedidoRepository {
             stmt.setString(2, ip.getPizza().getId());
             stmt.setInt(3, ip.getQuantidade());
             stmt.setDouble(4, ip.getSubtotal());
+            stmt.setString(5, pedidoId);
 
             stmt.executeUpdate();
         }
@@ -48,6 +49,22 @@ public class ItemPedidoRepository {
         }
 
         return null;
+    }
+
+    public List<ItemPedido> buscarPorPedido(String pedidoId) throws SQLException {
+        List<ItemPedido> itens = new ArrayList<>();
+        String sql = "SELECT * FROM item_pedido WHERE pedido_id = ?";
+        try (Connection conn = ConnectionFactory.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, pedidoId);
+            ResultSet rs = stmt.executeQuery();
+            PizzaRepository pizzaRepo = new PizzaRepository();
+            while (rs.next()) {
+                Pizza pizza = pizzaRepo.buscarPorId(rs.getString("pizza_id"));
+                itens.add(new ItemPedido(rs.getString("id"), pizza, rs.getInt("quantidade"), rs.getDouble("subtotal")));
+            }
+        }
+        return itens;
     }
 
     public List<ItemPedido> listar() throws SQLException {

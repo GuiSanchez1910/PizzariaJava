@@ -97,6 +97,15 @@ CREATE TABLE item_pedido (
     FOREIGN KEY (pizza_id) REFERENCES pizza(id)
 );
 ```
+```sql
+CREATE TABLE pedido (
+    id VARCHAR(50) PRIMARY KEY,
+    cliente_id VARCHAR(255) NOT NULL,
+    data_hora VARCHAR(10) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    valor_total double NOT NULL
+);
+```
 
 ### API Endpoints
 
@@ -129,3 +138,13 @@ CREATE TABLE item_pedido (
 | `POST`   | `/itens-pedido`      | Cria um novo item de pedido (calcula subtotal automaticamente) |
 | `PUT`    | `/itens-pedido/{id}` | Atualiza as informações de um item de pedido                   |
 | `DELETE` | `/itens-pedido/{id}` | Remove um item de pedido permanentemente                       |
+
+### PEDIDO
+
+| Método   | Endpoint             | Descrição                                                      |
+| :------- | :------------------- | :------------------------------------------------------------- |
+| `GET`    | `/pedidos`      | Lista todos os pedidos cadastrados                             |
+| `GET`    | `/pedidos/{id}` | Busca os detalhes de um pedido por ID                          |
+| `POST`   | `/pedidos`      | Cria um novo pedido                                            |
+| `PUT`    | `/pedidos/{id}` | Atualiza as informações de um  pedido                          |
+| `DELETE` | `/pedidos/{id}` | Remove um pedido permanentemente                               |

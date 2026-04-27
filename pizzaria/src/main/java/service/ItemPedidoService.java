@@ -11,7 +11,7 @@ public class ItemPedidoService {
     private ItemPedidoRepository repo = new ItemPedidoRepository();
     private PizzaService pizzaService = new PizzaService();
 
-    public ItemPedido criarItemPedido(ItemPedido ip) throws Exception {
+    public ItemPedido criarItemPedido(ItemPedido ip, String pedidoId) throws Exception {
 
         if (ip.getPizza() == null || ip.getPizza().getId() == null) {
             throw new Exception("Pizza é obrigatória");
@@ -30,7 +30,7 @@ public class ItemPedidoService {
         ip.setPizza(pizza);
         ip.calcularSubtotal();
 
-        repo.salvar(ip);
+        repo.salvar(ip, pedidoId);
 
         return ip;
     }
