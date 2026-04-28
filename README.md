@@ -44,7 +44,6 @@ Classe de associação que gerencia a relação entre produtos e vendas.
 Classe centralizadora da inteligência de negócio.
 
 - **Atributos:** `id`, `cliente`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
-- **Fluxo de Status:** `CRIADO` → `PREPARANDO` → `ENTREGUE`.
 - **Relacionamento:** Pertence a um `Cliente` (N:1) e possui múltiplos `ItemPedidos` (1:N).
 
 ---
