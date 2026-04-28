@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpServer;
 import handler.ClienteHandler;
 import handler.PizzaHandler;
 import handler.ItemPedidoHandler;
+import handler.PedidoHandler;
 
 public class ApiServer {
 
@@ -16,6 +17,7 @@ public class ApiServer {
 		server.createContext("/pizzas", new PizzaHandler());
 		server.createContext("/clientes", new ClienteHandler());
 		server.createContext("/itens-pedido", new ItemPedidoHandler());
+		server.createContext("/pedidos", new PedidoHandler());
 
 		server.setExecutor(null);
 		server.start();

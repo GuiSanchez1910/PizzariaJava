@@ -31,54 +31,69 @@ public class PedidoHandler implements HttpHandler {
             } else if (metodo.equals("PUT")) {
                 atualizar(exchange);
             } else {
-                exchange.sendResponseHeaders(405, -1);
+                enviar(exchange, 405, "{\"erro\":\"Método não permitido\"}");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            byte[] response = "{\"erro\":\"Erro interno no servidor\"}".getBytes();
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(500, response.length);
-            exchange.getResponseBody().write(response);
-            exchange.getResponseBody().close();
+            enviar(exchange, 500, "{\"erro\":\"Erro interno no servidor\"}");
         }
     }
 
-    private void listar(HttpExchange exchange) throws Exception {
+    private void listar(HttpExchange exchange) throws IOException {
         
-        String json = mapper.writeValueAsString(service.listarPedidos());
-        enviar(exchange, json, 200);
-    }
-
-    private void criar(HttpExchange exchange) throws Exception {
-        Pedido p = mapper.readValue(exchange.getRequestBody(), Pedido.class);
-        Pedido criado = service.criarPedido(p);
-        enviar(exchange, mapper.writeValueAsString(criado), 201);
-    }
-
-    private void buscarPorId(HttpExchange exchange) throws Exception {
-        String id = exchange.getRequestURI().getPath().split("/")[2];
-        Pedido p = service.buscarPorId(id);
-
-        if (p != null) {
-            enviar(exchange, mapper.writeValueAsString(p), 200);
-        } else {
-            enviar(exchange, "{\"erro\":\"Pedido não encontrado\"}", 404);
+        try {
+            String json = mapper.writeValueAsString(service.listarPedidos());
+            enviar(exchange, 200, json);
+        } catch (Exception e) {
+            enviar(exchange, 500, "{\"erro\":\"Erro ao listar pedidos\"}");
         }
     }
 
-    private void deletar(HttpExchange exchange) throws Exception {
-        String id = exchange.getRequestURI().getPath().split("/")[2];
-        service.deletar(id);
-        enviar(exchange, "{\"mensagem\":\"Deletado\"}", 200);
+    private void criar(HttpExchange exchange) throws IOException {
+        
+        try {
+            Pedido p = mapper.readValue(exchange.getRequestBody(), Pedido.class);
+            Pedido criado = service.criarPedido(p);
+            enviar(exchange, 201, mapper.writeValueAsString(criado));
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void atualizar(HttpExchange exchange) throws Exception {
-        Pedido p = mapper.readValue(exchange.getRequestBody(), Pedido.class);
-        Pedido atualizado = service.atualizar(p);
-        enviar(exchange, mapper.writeValueAsString(atualizado), 200);
+    private void buscarPorId(HttpExchange exchange) throws IOException {
+
+        try {
+            String id = exchange.getRequestURI().getPath().split("/")[2];
+            Pedido p = service.buscarPorId(id);
+            enviar(exchange, 200, mapper.writeValueAsString(p));
+        } catch (Exception e) {
+            enviar(exchange, 404, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void enviar(HttpExchange exchange, String resposta, int statusCode) throws IOException {
+    private void deletar(HttpExchange exchange) throws IOException {
+
+        try {
+            String id = exchange.getRequestURI().getPath().split("/")[2];
+            service.deletar(id);
+            enviar(exchange, 200, "{\"mensagem\":\"Deletado\"}");
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    private void atualizar(HttpExchange exchange) throws IOException {
+
+        try {
+            Pedido p = mapper.readValue(exchange.getRequestBody(), Pedido.class);
+            Pedido atualizado = service.atualizar(p);
+            enviar(exchange, 200, mapper.writeValueAsString(atualizado));
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
+    }
+
+    private void enviar(HttpExchange exchange, int statusCode, String resposta) throws IOException {
         byte[] bytes = resposta.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
@@ -87,5 +102,4 @@ public class PedidoHandler implements HttpHandler {
             os.write(bytes);
         }
     }
-
 }

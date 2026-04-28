@@ -3,6 +3,8 @@ package service;
 import java.util.List;
 import java.util.UUID;
 
+import exception.ItemPedidoNaoEncontradoException;
+import exception.ValidacaoException;
 import models.ItemPedido;
 import models.Pizza;
 import repository.ItemPedidoRepository;
@@ -14,16 +16,16 @@ public class ItemPedidoService {
     public ItemPedido criarItemPedido(ItemPedido ip, String pedidoId) throws Exception {
 
         if (ip.getPizza() == null || ip.getPizza().getId() == null) {
-            throw new Exception("Pizza é obrigatória");
+            throw new ValidacaoException("Pizza é obrigatória");
         }
 
         if (ip.getQuantidade() == null || ip.getQuantidade() <= 0) {
-            throw new Exception("Quantidade deve ser maior que zero");
+            throw new ValidacaoException("Quantidade deve ser maior que zero");
         }
 
         Pizza pizza = pizzaService.buscarPorId(ip.getPizza().getId());
         if (pizza == null) {
-            throw new Exception("Pizza não encontrada");
+            throw new ValidacaoException("Pizza não encontrada");
         }
 
         ip.setId(UUID.randomUUID().toString());
@@ -40,30 +42,42 @@ public class ItemPedidoService {
     }
 
     public ItemPedido buscarPorId(String id) throws Exception {
-        return repo.buscarPorId(id);
+        ItemPedido ip = repo.buscarPorId(id);
+        
+        if (ip == null) {
+            throw new ItemPedidoNaoEncontradoException("Item de pedido com id " + id + " não encontrado");
+        }
+        
+        return ip;
     }
 
     public void deletar(String id) throws Exception {
+        ItemPedido itemPedido = repo.buscarPorId(id);
+        
+        if (itemPedido == null) {
+            throw new ItemPedidoNaoEncontradoException("Item de pedido com ID " + id + " não encontrado.");
+        }
+        
         repo.deletar(id);
     }
 
     public ItemPedido atualizar(ItemPedido ip) throws Exception {
 
         if (ip.getId() == null) {
-            throw new Exception("ID obrigatório");
+            throw new ValidacaoException("ID obrigatório");
         }
 
         if (ip.getPizza() == null || ip.getPizza().getId() == null) {
-            throw new Exception("Pizza é obrigatória");
+            throw new ValidacaoException("Pizza é obrigatória");
         }
 
         if (ip.getQuantidade() == null || ip.getQuantidade() <= 0) {
-            throw new Exception("Quantidade deve ser maior que zero");
+            throw new ValidacaoException("Quantidade deve ser maior que zero");
         }
 
         Pizza pizza = pizzaService.buscarPorId(ip.getPizza().getId());
         if (pizza == null) {
-            throw new Exception("Pizza não encontrada");
+            throw new ValidacaoException("Pizza não encontrada");
         }
 
         ip.setPizza(pizza);

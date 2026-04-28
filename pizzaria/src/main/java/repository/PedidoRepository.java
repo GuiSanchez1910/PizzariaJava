@@ -14,18 +14,20 @@ public class PedidoRepository {
 
     public void salvar(Pedido p) throws SQLException {
 
-        String sql = "INSERT INTO pedido (id, cliente_id, valor_total) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO pedido (id, cliente_id, data_hora, status, valor_total) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConnectionFactory.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, p.getId());
-            stmt.setString(2, p.getCliente().getId());
-            stmt.setDouble(3, p.getValorTotal());
+        stmt.setString(1, p.getId());
+        stmt.setString(2, p.getCliente().getId());
+        stmt.setString(3, p.getDataHora());
+        stmt.setString(4, p.getStatus());
+        stmt.setDouble(5, p.getValorTotal());
 
-            stmt.executeUpdate();
-        }
+        stmt.executeUpdate();
     }
+}
 
     public Pedido buscarPorId(String id) throws SQLException {
         String sql = "SELECT * FROM pedido WHERE id = ?";
@@ -38,10 +40,14 @@ public class PedidoRepository {
                 Pedido p = new Pedido();
                 p.setId(rs.getString("id"));
                 p.setValorTotal(rs.getDouble("valor_total"));
+                p.setDataHora(rs.getString("data_hora"));  
+                p.setStatus(rs.getString("status"));       
+
                 p.setCliente(clienteRepo.buscarPorId(rs.getString("cliente_id")));
                 p.setItens(itemRepo.buscarPorPedido(id));
+
                 return p;
-            }
+}
         }
         return null;
     }

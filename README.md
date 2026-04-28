@@ -21,20 +21,23 @@ A lógica de domínio está estruturada em quatro entidades fundamentais, organi
 Responsável pela identificação e localização do consumidor.
 
 - **Atributos:** `id`, `nome`, `telefone`, `endereco`.
+- **Relacionamento:** Possui múltiplos `Pedidos` (1:N).
 
 ### 2. Entidade Pizza
 
 Define os produtos e especificações do catálogo.
 
-- **Atributos:** `id`, `sabor`, `tamanho` (P, M, G), `precoBase`.
+- **Atributos:** `id`, `sabor`, `tamanho`, `precoBase`.
+- **Relacionamento:** Referenciada em múltiplos `ItemPedidos` (1:N).
 
 ### 3. Entidade ItemPedido
 
 Classe de associação que gerencia a relação entre produtos e vendas.
 
-- **Atributos:** `id`, `pizza`, `quantidade`, `subtotal`.
+- **Atributos:** `id`, `pedido`, `pizza`, `quantidade`, `subtotal`.
 - **Lógica de Cálculo:**
   $$subtotal = precoBase \times quantidade$$
+- **Relacionamento:** Pertence a um `Pedido` (N:1) e referencia uma `Pizza` (N:1).
 
 ### 4. Entidade Pedido
 
@@ -42,6 +45,7 @@ Classe centralizadora da inteligência de negócio.
 
 - **Atributos:** `id`, `cliente`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
 - **Fluxo de Status:** `CRIADO` → `PREPARANDO` → `ENTREGUE`.
+- **Relacionamento:** Pertence a um `Cliente` (N:1) e possui múltiplos `ItemPedidos` (1:N).
 
 ---
 
@@ -68,42 +72,39 @@ Classe centralizadora da inteligência de negócio.
 
 ```sql
 CREATE DATABASE pizzaria;
-```
+USE pizzaria;
 
-```sql
 CREATE TABLE pizza (
-    id VARCHAR (50) PRIMARY KEY,
+    id VARCHAR(50) PRIMARY KEY,
     sabor VARCHAR(255) NOT NULL,
-    tamanho VARCHAR(10),
+    tamanho VARCHAR(10) NOT NULL,
     preco_base DOUBLE NOT NULL
 );
-```
 
-```sql
 CREATE TABLE cliente (
-    id VARCHAR (50) PRIMARY KEY,
+    id VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     telefone VARCHAR(15) NOT NULL,
-    endereco VARCHAR(255)
+    endereco VARCHAR(255) NOT NULL
 );
-```
 
-```sql
+CREATE TABLE pedido (
+    id VARCHAR(50) PRIMARY KEY,
+    cliente_id VARCHAR(50) NOT NULL,
+    data_hora VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'PENDENTE',
+    valor_total DOUBLE NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE
+);
+
 CREATE TABLE item_pedido (
     id VARCHAR(50) PRIMARY KEY,
+    pedido_id VARCHAR(50) NOT NULL,
     pizza_id VARCHAR(50) NOT NULL,
     quantidade INT NOT NULL,
     subtotal DOUBLE NOT NULL,
-    FOREIGN KEY (pizza_id) REFERENCES pizza(id)
-);
-```
-```sql
-CREATE TABLE pedido (
-    id VARCHAR(50) PRIMARY KEY,
-    cliente_id VARCHAR(255) NOT NULL,
-    data_hora VARCHAR(10) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    valor_total double NOT NULL
+    FOREIGN KEY (pedido_id) REFERENCES pedido(id) ON DELETE CASCADE,
+    FOREIGN KEY (pizza_id) REFERENCES pizza(id) ON DELETE CASCADE
 );
 ```
 

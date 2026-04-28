@@ -61,7 +61,8 @@ public class ItemPedidoRepository {
             PizzaRepository pizzaRepo = new PizzaRepository();
             while (rs.next()) {
                 Pizza pizza = pizzaRepo.buscarPorId(rs.getString("pizza_id"));
-                itens.add(new ItemPedido(rs.getString("id"), pizza, rs.getInt("quantidade"), rs.getDouble("subtotal")));
+                ItemPedido item = new ItemPedido(rs.getString("id"), pizza, rs.getInt("quantidade"), rs.getDouble("subtotal"));
+                itens.add(item);
             }
         }
         return itens;

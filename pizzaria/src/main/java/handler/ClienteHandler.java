@@ -39,65 +39,89 @@ public class ClienteHandler implements HttpHandler{
                 atualizar(exchange);
 
             } else {
-                exchange.sendResponseHeaders(405, -1);
+                enviar(exchange, 405, "{\"erro\":\"Método não permitido\"}");
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); 
-            exchange.sendResponseHeaders(500, -1);
+            e.printStackTrace();
+            enviar(exchange, 500, "{\"erro\":\"Erro interno no servidor\"}");
         }
     }
 
-    private void listar(HttpExchange exchange) throws Exception {
+    private void listar(HttpExchange exchange) throws IOException {
 
-        String json = mapper.writeValueAsString(service.listarClientes());
-        enviar(exchange, json);
+        try {
+            String json = mapper.writeValueAsString(service.listarClientes());
+            enviar(exchange, 200, json);
+
+        } catch (Exception e) {
+            enviar(exchange, 500, "{\"erro\":\"Erro ao listar clientes\"}");
+        }
     }
 
-    private void criar(HttpExchange exchange) throws Exception {
+    private void criar(HttpExchange exchange) throws IOException {
 
-        Cliente c = mapper.readValue(exchange.getRequestBody(), Cliente.class);
+        try {
+            Cliente c = mapper.readValue(exchange.getRequestBody(), Cliente.class);
 
-        Cliente criado = service.criarCliente(c);
+            Cliente criado = service.criarCliente(c);
 
-        enviar(exchange, mapper.writeValueAsString(criado));
+            enviar(exchange, 201, mapper.writeValueAsString(criado));
+
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void buscarPorId(HttpExchange exchange) throws Exception {
+    private void buscarPorId(HttpExchange exchange) throws IOException {
 
-        String id = exchange.getRequestURI().getPath().split("/")[2];
+        try {
+            String id = exchange.getRequestURI().getPath().split("/")[2];
 
-        Cliente c = service.buscarPorId(id);
+            Cliente c = service.buscarPorId(id);
 
-        enviar(exchange, mapper.writeValueAsString(c));
+            enviar(exchange, 200, mapper.writeValueAsString(c));
+
+        } catch (Exception e) {
+            enviar(exchange, 404, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void deletar(HttpExchange exchange) throws Exception {
+    private void deletar(HttpExchange exchange) throws IOException {
 
-        String id = exchange.getRequestURI().getPath().split("/")[2];
+        try {
+            String id = exchange.getRequestURI().getPath().split("/")[2];
 
-        service.deletar(id);
+            service.deletar(id);
 
-        enviar(exchange, "{\"mensagem\":\"Deletado\"}");
+            enviar(exchange, 200, "{\"mensagem\":\"Deletado\"}");
+
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void atualizar(HttpExchange exchange) throws Exception {
+    private void atualizar(HttpExchange exchange) throws IOException {
 
-        Cliente c = mapper.readValue(exchange.getRequestBody(), Cliente.class);
+        try {
+            Cliente c = mapper.readValue(exchange.getRequestBody(), Cliente.class);
 
-        Cliente atualizado = service.atualizar(c);
+            Cliente atualizado = service.atualizar(c);
 
-        enviar(exchange, mapper.writeValueAsString(atualizado));
+            enviar(exchange, 200, mapper.writeValueAsString(atualizado));
+
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+        }
     }
 
-    private void enviar(HttpExchange exchange, String resposta) throws IOException {
+    private void enviar(HttpExchange exchange, int statusCode, String resposta) throws IOException {
 
         exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(200, resposta.getBytes().length);
+        exchange.sendResponseHeaders(statusCode, resposta.getBytes().length);
 
         OutputStream os = exchange.getResponseBody();
         os.write(resposta.getBytes());
         os.close();
     }
-    
 }

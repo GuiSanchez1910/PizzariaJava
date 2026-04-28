@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import exception.PizzaNaoEncontradaException;
+import exception.ValidacaoException;
+import exception.ErroOperacaoBancoException;
 
 import models.Pizza;
 import repository.PizzaRepository;
@@ -14,15 +16,15 @@ public class PizzaService {
     public Pizza criarPizza(Pizza p) throws Exception {
 
         if (p.getSabor() == null || p.getSabor().isEmpty()) {
-            throw new Exception("Sabor é obrigatório");
+            throw new ValidacaoException("Sabor é obrigatório");
         }
 
         if (p.getTamanho() == null || p.getTamanho().isEmpty()) {
-            throw new Exception("Tamanho é obrigatório");
+            throw new ValidacaoException("Tamanho é obrigatório");
         }
 
         if (p.getPrecoBase() == null || p.getPrecoBase() <= 0) {
-            throw new Exception("Preço base deve ser maior que zero");
+            throw new ValidacaoException("Preço base deve ser maior que zero");
         }
 
         p.setId(UUID.randomUUID().toString());
@@ -58,34 +60,32 @@ public class PizzaService {
             repo.deletar(id);
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao acessar o banco de dados.", e);
+            throw new ErroOperacaoBancoException("Erro ao deletar pizza no banco de dados.", e);
         }
     }
 
     public Pizza atualizar(Pizza p) throws Exception {
 
-        System.out.println("ID recebido: [" + p.getId() + "]");
-
         if (p.getId() == null || p.getId().trim().isEmpty()) {
-            throw new Exception("ID é obrigatório");
+            throw new ValidacaoException("ID é obrigatório");
         }
 
         if (p.getSabor() == null || p.getSabor().isEmpty()) {
-            throw new Exception("Sabor é obrigatório");
+            throw new ValidacaoException("Sabor é obrigatório");
         }
 
         if (p.getTamanho() == null || p.getTamanho().isEmpty()) {
-            throw new Exception("Tamanho é obrigatório");
+            throw new ValidacaoException("Tamanho é obrigatório");
         }
 
         if (p.getPrecoBase() == null || p.getPrecoBase() <= 0) {
-            throw new Exception("Preço base deve ser maior que zero");
+            throw new ValidacaoException("Preço base deve ser maior que zero");
         }
 
         try {
             repo.atualizar(p);
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar pizza no banco", e);
+            throw new ErroOperacaoBancoException("Erro ao atualizar pizza no banco de dados.", e);
         }
 
         return p;
