@@ -60,17 +60,28 @@
 
         private void criar(HttpExchange exchange) throws IOException {
 
-            try {
-                ItemPedido ip = mapper.readValue(exchange.getRequestBody(), ItemPedido.class);
+        try {
+            var node = mapper.readTree(exchange.getRequestBody());
 
-                ItemPedido criado = service.criarItemPedido(ip, null);
+            ItemPedido ip = mapper.treeToValue(node, ItemPedido.class);
 
-                enviar(exchange, 201, mapper.writeValueAsString(criado));
+            String pedidoId = node.get("pedido") != null
+                    ? node.get("pedido").get("id").asText()
+                    : null;
 
-            } catch (Exception e) {
-                enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
+            if (pedidoId == null || pedidoId.isEmpty()) {
+                enviar(exchange, 400, "{\"erro\":\"Pedido é obrigatório\"}");
+                return;
             }
+
+            ItemPedido criado = service.criarItemPedido(ip, pedidoId);
+
+            enviar(exchange, 201, mapper.writeValueAsString(criado));
+
+        } catch (Exception e) {
+            enviar(exchange, 400, "{\"erro\": \"" + e.getMessage() + "\"}");
         }
+    }
 
         private void buscarPorId(HttpExchange exchange) throws IOException {
 
