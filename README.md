@@ -1,8 +1,8 @@
 # Integrantes:
-Guilherme Cerqueira Sanchez
-Guilherme Krelling
-Nicolas Perandré Rapp
-Tobias Albieri
+Guilherme Cerqueira Sanchez;
+Guilherme Krelling;
+Nicolas Perandré Rapp;
+Tobias Albieri;
  
  # PizzariaJava
 
