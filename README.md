@@ -1,4 +1,10 @@
-﻿# PizzariaJava
+# Integrantes:
+Guilherme Cerqueira Sanchez
+Guilherme Krelling
+Nicolas Perandré Rapp
+Tobias Albieri
+ 
+ # PizzariaJava
 
 > **Sistema de Gestão de Pedidos**
 >
