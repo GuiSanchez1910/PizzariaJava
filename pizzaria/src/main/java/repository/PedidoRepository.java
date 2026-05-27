@@ -14,7 +14,7 @@ public class PedidoRepository {
 
     public void salvar(Pedido p) throws SQLException {
 
-    String sql = "INSERT INTO pedido (id, cliente_id, data_hora, status, valor_total) VALUES (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO pedido (id, cliente_id, data_hora, status, valor_total, cep, numero) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection conn = ConnectionFactory.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,6 +24,8 @@ public class PedidoRepository {
         stmt.setString(3, p.getDataHora());
         stmt.setString(4, p.getStatus());
         stmt.setDouble(5, p.getValorTotal());
+        stmt.setString(6, p.getCep());
+        stmt.setString(7, p.getNumero());
 
         stmt.executeUpdate();
     }
@@ -42,6 +44,8 @@ public class PedidoRepository {
                 p.setValorTotal(rs.getDouble("valor_total"));
                 p.setDataHora(rs.getString("data_hora"));  
                 p.setStatus(rs.getString("status"));       
+                p.setCep(rs.getString("cep"));
+                p.setNumero(rs.getString("numero"));
 
                 p.setCliente(clienteRepo.buscarPorId(rs.getString("cliente_id")));
                 p.setItens(itemRepo.buscarPorPedido(id));
@@ -66,9 +70,9 @@ public class PedidoRepository {
                 p.setValorTotal(rs.getDouble("valor_total"));
                 p.setDataHora(rs.getString("data_hora"));
                 p.setStatus(rs.getString("status"));
-
+                p.setCep(rs.getString("cep"));
+                p.setNumero(rs.getString("numero"));
                 p.setCliente(clienteRepo.buscarPorId(rs.getString("cliente_id")));
-
                 p.setItens(itemRepo.buscarPorPedido(p.getId()));
 
                 pedidos.add(p);

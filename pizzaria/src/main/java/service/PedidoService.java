@@ -6,6 +6,7 @@ import java.util.UUID;
 import exception.PedidoNaoEncontradoException;
 import exception.ValidacaoException;
 import models.Cliente;
+import models.Endereco;
 import models.ItemPedido;
 import models.Pedido;
 import models.Pizza;
@@ -18,6 +19,7 @@ public class PedidoService {
     
     private PedidoRepository repo = new PedidoRepository();
     private PizzaService pizzaService = new PizzaService();
+    private CepService cepService = new CepService();
     private ItemPedidoRepository itemRepo = new ItemPedidoRepository();
     private ClienteRepository clienteRepo = new ClienteRepository();
 
@@ -69,16 +71,32 @@ public class PedidoService {
     }
 
     public List<Pedido> listarPedidos() throws Exception {
-        return repo.listar();
+
+        List<Pedido> pedidos = repo.listar();
+
+        for (Pedido p : pedidos) {
+
+            if (p.getCep() != null && !p.getCep().isBlank()) {
+
+                Endereco endereco = cepService.buscarEndereco(p.getCep());
+
+                p.setEndereco(endereco);
+            }
+        }
+
+        return pedidos;
     }
 
     public Pedido buscarPorId(String id) throws Exception {
         Pedido p = repo.buscarPorId(id);
-        
         if (p == null) {
             throw new PedidoNaoEncontradoException("Pedido com id " + id + " não encontrado");
         }
-        
+
+        Endereco endereco = cepService.buscarEndereco(p.getCep());
+
+        p.setEndereco(endereco);
+
         return p;
     }
 

@@ -5,16 +5,14 @@ public class Cliente {
     private String id;
     private String nome;
     private String telefone;
-    private String endereco;
 
     public Cliente() {
     }
 
-    public Cliente(String id, String nome, String telefone, String endereco) {
+    public Cliente(String id, String nome, String telefone) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
-        this.endereco = endereco;
     }
 
     public String getId() {
@@ -39,13 +37,5 @@ public class Cliente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
     }
 }

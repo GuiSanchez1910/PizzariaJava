@@ -22,9 +22,6 @@ public class ClienteService {
             throw new ValidacaoException("Telefone é obrigatório");
         }
 
-        if (c.getEndereco() == null || c.getEndereco().isEmpty()) {
-            throw new ValidacaoException("Endereço é obrigatório");
-        }
         
         c.setId(UUID.randomUUID().toString());
 

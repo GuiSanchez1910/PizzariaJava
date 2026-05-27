@@ -4,10 +4,13 @@ import java.util.List;
 public class Pedido {
     private String id;
     private Cliente cliente;
+    private Endereco endereco;
     private List<ItemPedido> itens;
     private String dataHora;
     private String status;
     private Double valorTotal;
+    private String cep;
+    private String numero;
 
     public Pedido() {
     }
@@ -19,6 +22,14 @@ public class Pedido {
         this.dataHora = dataHora;
         this.status = status;
         this.valorTotal = valorTotal;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
     }
 
     public String getId() {
@@ -77,4 +88,21 @@ public class Pedido {
                 .sum();
         }
     }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
 }
