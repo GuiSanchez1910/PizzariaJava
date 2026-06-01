@@ -1,6 +1,0 @@
-models\Pizza.class
-service\PizzaService.class
-config\ConnectionFactory.class
-ApiServer.class
-handler\PizzaHandler.class
-repository\PizzaRepository.class

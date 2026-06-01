@@ -1,4 +1,10 @@
-﻿# PizzariaJava
+# Integrantes:
+Guilherme Cerqueira Sanchez;
+Guilherme Krelling;
+Nicolas Perandré Rapp;
+Tobias Albieri;
+ 
+ # PizzariaJava
 
 > **Sistema de Gestão de Pedidos**
 >
@@ -8,8 +14,8 @@
 
 ## Sobre o Projeto
 
-O sistema faz o gerenciamento de clientes e cardápio e o fechamento financeiro do pedido. A solução automatiza cálculos de subtotal por item e consolida o valor total do pedido, com estados logísticos.
-
+O sistema faz o gerenciamentode clientes e cardápio e o fechamento financeiro do pedido. A solução automatiza cálculos de subtotal por item e consolida o valor total do pedido, com estados logísticos.
+ 
 ---
 
 ## Arquitetura do Modelo de Dados
@@ -20,7 +26,7 @@ A lógica de domínio está estruturada em quatro entidades fundamentais, organi
 
 Responsável pela identificação e localização do consumidor.
 
-- **Atributos:** `id`, `nome`, `telefone`, `endereco`.
+- **Atributos:** `id`, `nome`, `telefone`.
 - **Relacionamento:** Possui múltiplos `Pedidos` (1:N).
 
 ### 2. Entidade Pizza
@@ -43,20 +49,28 @@ Classe de associação que gerencia a relação entre produtos e vendas.
 
 Classe centralizadora da inteligência de negócio.
 
-- **Atributos:** `id`, `cliente`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
-- **Fluxo de Status:** `CRIADO` → `PREPARANDO` → `ENTREGUE`.
-- **Relacionamento:** Pertence a um `Cliente` (N:1) e possui múltiplos `ItemPedidos` (1:N).
+- **Atributos:** `id`, `cliente`, `endereco`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
+- **Relacionamento:** Pertence a um `Cliente` (N:1), possui múltiplos `ItemPedidos` (1:N).
+
+### 5. Entidade Endereco
+
+Classe que possue os dados para entrega do pedido.
+
+- **Atributos:** `cep`, `logradouro`, `bairro`, `localidade`, `uf`.
+- Relacionamento: É utilizado por um `Pedido` (1:1).
 
 ---
 
 ## Regras de Negócio e Implementação
 
-| Funcionalidade        | Descrição Técnica                                             |
-| :-------------------- | :------------------------------------------------------------ |
-| **Persistência**      | Implementada via JDBC com suporte a transações relacionais.   |
-| **Cálculo de Totais** | Iteração sobre coleções (`List`) para soma de subtotais.      |
-| **Gestão de Tempo**   | Registro preciso de transações utilizando `LocalDateTime`.    |
-| **Validação**         | Camada de verificação pré-persistência para dados de contato. |
+| Funcionalidade        | Descrição Técnica                                                  |
+| :-------------------- | :----------------------------------------------------------------- |
+| **Persistência**      | Implementada via JDBC com suporte a transações relacionais.        |
+| **Cálculo de Totais** | Iteração sobre coleções (`List`) para soma de subtotais.           |
+| **Gestão de Tempo**   | Registro preciso de transações utilizando `LocalDateTime`.         |
+| **Validação**         | Camada de verificação pré-persistência para dados de contato.      |
+| **ViaCEP**            | Implementação para consulta dos dados do endereço pela API ViaCEP. |
+| **RabbitMQ**          | Implementação de mensageria para pedidos via RabbitMQ.             |
 
 ---
 
@@ -67,6 +81,8 @@ Classe centralizadora da inteligência de negócio.
 - Java Development Kit (JDK) 17+
 - MySQL Server 8.0+
 - Maven ou IDE compatível (IntelliJ/Eclipse)
+- RabbitMQ configurado
+- Erlang configurado
 
 # SCHEMA
 
@@ -84,8 +100,7 @@ CREATE TABLE pizza (
 CREATE TABLE cliente (
     id VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    telefone VARCHAR(15) NOT NULL,
-    endereco VARCHAR(255) NOT NULL
+    telefone VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE pedido (
@@ -94,6 +109,8 @@ CREATE TABLE pedido (
     data_hora VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'PENDENTE',
     valor_total DOUBLE NOT NULL,
+    cep VARCHAR(9),
+    numero VARCHAR(20),
     FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE
 );
 
