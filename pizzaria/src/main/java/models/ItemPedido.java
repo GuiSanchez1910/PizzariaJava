@@ -73,4 +73,14 @@ public class ItemPedido {
             this.subtotal = this.pizza.getPrecoBase() * this.quantidade;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ItemPedido{" +
+                "id='" + id + '\'' +
+                ", pizza=" + pizza +
+                ", quantidade=" + quantidade +
+                ", subtotal=" + subtotal +
+                '}';
+    }
 }

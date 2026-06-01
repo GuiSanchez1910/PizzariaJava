@@ -47,4 +47,14 @@ public class Pizza {
     public void setPrecoBase(Double precoBase) {
         this.precoBase = precoBase;
     }
+
+    @Override
+    public String toString() {
+        return "Pizza{" +
+                "id='" + id + '\'' +
+                ", sabor='" + sabor + '\'' +
+                ", tamanho='" + tamanho + '\'' +
+                ", precoBase=" + precoBase +
+                '}';
+    }
 }

@@ -24,6 +24,18 @@ public class Pedido {
         this.valorTotal = valorTotal;
     }
 
+    public Pedido(String id, Cliente cliente, Endereco endereco, List<ItemPedido> itens, String dataHora, String status, String cep, String numero) {
+        this.id = id;
+        this.cliente = cliente;
+        this.endereco = endereco;
+        this.itens = itens;
+        this.dataHora = dataHora;
+        this.status = status;
+        this.cep = cep;
+        this.numero = numero;
+        this.calcularSubtotal();
+    }
+
     public String getNumero() {
         return numero;
     }
@@ -103,6 +115,33 @@ public class Pedido {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    @Override
+    public String toString() {
+        return """
+                Pedido {
+                    id='%s',
+                    cliente=%s,
+                    endereco=%s,
+                    itens=%s,
+                    dataHora='%s',
+                    status='%s',
+                    valorTotal=R$ %.2f,
+                    cep='%s',
+                    numero='%s'
+                }
+                """.formatted(
+                        id,
+                        cliente,
+                        endereco,
+                        itens,
+                        dataHora,
+                        status,
+                        valorTotal,
+                        cep,
+                        numero
+                );
     }
 
 }
