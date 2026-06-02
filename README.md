@@ -49,7 +49,7 @@ Classe de associação que gerencia a relação entre produtos e vendas.
 
 Classe centralizadora da inteligência de negócio.
 
-- **Atributos:** `id`, `cliente`, `endereco`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`.
+- **Atributos:** `id`, `cliente`, `endereco`, `List<ItemPedido>`, `dataHora`, `status`, `valorTotal`, `cep`, `numero`.
 - **Relacionamento:** Pertence a um `Cliente` (N:1), possui múltiplos `ItemPedidos` (1:N).
 
 ### 5. Entidade Endereco
